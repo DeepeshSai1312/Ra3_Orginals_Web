@@ -1,13 +1,25 @@
 import { ReactNode } from 'react';
-import Header from '@components/Header';
+import FloatingWhatsApp from '@components/FloatingWhatsApp';
 import Footer from '@components/Footer';
+import Header from '@components/Header';
+import MobileStickyBar from '@components/MobileStickyBar';
+import { SiteSettingsProvider } from '@components/SiteData';
+import { getSiteSettings } from '@utils/getSiteSettings';
 
-export default function HomeLayout({ children }: { children: ReactNode }) {
+export default async function HomeLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  const settings = await getSiteSettings();
   return (
-    <>
+    <SiteSettingsProvider value={settings}>
       <Header />
-      <main className="flex flex-1 flex-col">{children}</main>
+      {/* Bottom padding on mobile so the sticky bar never covers the footer. */}
+      <main className="pb-[76px] lg:pb-0">{children}</main>
       <Footer />
-    </>
+      <FloatingWhatsApp />
+      <MobileStickyBar />
+    </SiteSettingsProvider>
   );
 }

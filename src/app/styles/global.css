@@ -1,20 +1,276 @@
 @import 'tailwindcss';
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* RA3 design tokens: see the "Style & Motion Guide" board in the design file. */
+@theme {
+  --color-ra3-red: #d80808;
+  --color-signal-red: #ff5a4f;
+  --color-deep-red: #b00606;
+  --color-night: #070707;
+  --color-ink: #0a0a0a;
+  --color-surface: #111111;
+  --color-surface-2: #0b0b0b;
+  --color-surface-3: #141414;
+  --color-footer: #050505;
+  --color-bone: #f2efea;
+  --color-text-strong: #d9d6d0;
+  --color-text-body: #b3b0ab;
+  --color-text-muted: #a9a6a1;
+  --color-text-label: #8e8a85;
+  --color-text-on-bone: #45423e;
+
+  --font-sans: var(--font-archivo), system-ui, sans-serif;
+  --font-serif: var(--font-instrument-serif), Georgia, serif;
+  --font-label: var(--font-michroma), var(--font-archivo), sans-serif;
+
+  --ease-cinematic: cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  --animate-line-up: line-up 1.1s var(--ease-cinematic) both;
+  --animate-fade-up: fade-up 1s var(--ease-cinematic) both;
+  --animate-float-a: float-a 7s ease-in-out infinite;
+  --animate-float-b: float-b 8s ease-in-out infinite;
+  --animate-float-c: float-c 7.5s ease-in-out infinite;
+  --animate-ribbon: ribbon 14s ease-in-out infinite;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-marquee-slow: marquee 60s linear infinite;
+  --animate-marquee-rev: marquee-rev 46s linear infinite;
+  --animate-pulse-dot: pulse-dot 2s infinite;
+  --animate-scroll-cue: scroll-cue 2.4s cubic-bezier(0.6, 0, 0.2, 1) infinite;
+  --animate-slow-zoom: slow-zoom 18s ease-in-out infinite alternate;
+
+  @keyframes line-up {
+    from {
+      transform: translateY(108%);
+    }
+    to {
+      transform: none;
+    }
+  }
+  @keyframes fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @keyframes float-a {
+    0%,
+    100% {
+      transform: translateY(0) rotate(-9deg);
+    }
+    50% {
+      transform: translateY(-18px) rotate(-7deg);
+    }
+  }
+  @keyframes float-b {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-26px) rotate(1deg);
+    }
+  }
+  @keyframes float-c {
+    0%,
+    100% {
+      transform: translateY(0) rotate(9deg);
+    }
+    50% {
+      transform: translateY(-14px) rotate(7deg);
+    }
+  }
+  @keyframes ribbon {
+    0%,
+    100% {
+      transform: translate(0, 0) rotate(-4deg) scale(1);
+    }
+    50% {
+      transform: translate(-20px, 24px) rotate(3deg) scale(1.04);
+    }
+  }
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes marquee-rev {
+    from {
+      transform: translateX(-50%);
+    }
+    to {
+      transform: translateX(0);
+    }
+  }
+  @keyframes pulse-dot {
+    0% {
+      box-shadow: 0 0 0 0 rgba(216, 8, 8, 0.75);
+    }
+    70% {
+      box-shadow: 0 0 0 14px rgba(216, 8, 8, 0);
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(216, 8, 8, 0);
+    }
+  }
+  @keyframes scroll-cue {
+    0% {
+      transform: scaleY(0);
+      transform-origin: top;
+    }
+    45% {
+      transform: scaleY(1);
+      transform-origin: top;
+    }
+    55% {
+      transform: scaleY(1);
+      transform-origin: bottom;
+    }
+    100% {
+      transform: scaleY(0);
+      transform-origin: bottom;
+    }
+  }
+  @keyframes slow-zoom {
+    from {
+      transform: scale(1.02);
+    }
+    to {
+      transform: scale(1.12);
+    }
+  }
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Condensed uppercase display type (Archivo 800, width 68%). */
+@utility headline {
+  font-weight: 800;
+  font-stretch: 68%;
+  text-transform: uppercase;
+  line-height: 0.9;
+  letter-spacing: -0.01em;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Instrument Serif italic accent, used for the emotional half of a headline. */
+@utility serif-accent {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: -0.01em;
+}
+
+/* Michroma section label. */
+@utility eyebrow {
+  font-family: var(--font-label);
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* Page container: max 1440px with 20–48px side padding. */
+@utility container-page {
+  max-width: 1440px;
+  margin-inline: auto;
+  padding-inline: clamp(20px, 3vw, 48px);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px;
+  }
+
+  body {
+    background: var(--color-night);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-signal-red);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Headline lines slide up from behind a mask. */
+  .line-mask {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.04em;
+  }
+  .line-mask > span {
+    display: block;
+    animation: var(--animate-line-up);
+  }
+
+  /* Scroll reveal: fade + rise as the element enters the viewport (once). */
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: fade-up linear both;
+      animation-timeline: view();
+      animation-range: entry 5% cover 28%;
+    }
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Cards: media border turns red, video scales to 106%, title turns signal red. */
+  .card-media {
+    transition: border-color 0.4s;
+  }
+  .card-media > video,
+  .card-media > img {
+    transition: transform 1.2s var(--ease-cinematic);
+  }
+  .card:hover .card-media {
+    border-color: var(--color-ra3-red);
+  }
+  .card:hover .card-media > video,
+  .card:hover .card-media > img {
+    transform: scale(1.06);
+  }
+  .card:hover .card-title {
+    color: var(--color-signal-red);
+  }
+
+  /* Nav links: red underline draws left to right. */
+  .nav-link {
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -6px;
+    height: 1px;
+    background: var(--color-ra3-red);
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s;
+  }
+  .nav-link:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* Honour reduced motion: stop marquees, floats, reveals and loops. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
